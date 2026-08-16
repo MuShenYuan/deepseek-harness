@@ -51,6 +51,10 @@ export function apply(ctx: Context): void {
               type: 'boolean',
               description: 'Whether the user may select more than one option. Defaults to false.',
             },
+            detail: {
+              type: 'string',
+              description: 'Optional supporting detail rendered with the question but kept out of option labels.',
+            },
           },
         },
       },
@@ -85,6 +89,7 @@ export function apply(ctx: Context): void {
           ...question.header !== undefined ? { header: question.header } : {},
           ...question.options !== undefined ? { options: question.options } : {},
           ...question.multi_select !== undefined ? { multiSelect: question.multi_select } : {},
+          ...question.detail !== undefined ? { detail: question.detail } : {},
         })),
         ...exec.agent !== undefined ? { agent: exec.agent } : {},
         signal: exec.signal,

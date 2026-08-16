@@ -14,6 +14,7 @@ Model-facing `ask_user_question` tool over `ctx.userQuestions`. It lets the mode
 - `header` — optional short heading.
 - `options` — optional choices with `label` and `description`. If recommending a choice, put it first and append `(Recommended)` to that label.
 - `multi_select` — whether that question may return more than one selected option.
+- `detail` — optional supporting detail rendered with the question; the web UI renders it as markdown below the question title.
 
 The tool calls `ctx.userQuestions.ask()` and returns canonical `{ answers: [{ id, selected, custom? }] }`. `selected` contains option labels; `custom` carries a free-form answer, supplementing `selected` for a multi-select question and overriding it for a single-select question. The Native renderer preserves the compact JSON text shape `{ "answers": [{ "id": "...", "selected": ["..."], "custom": "..." }] }`.
 

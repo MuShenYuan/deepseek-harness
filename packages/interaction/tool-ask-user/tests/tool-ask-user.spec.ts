@@ -65,6 +65,7 @@ describe('ask_user_question tool', () => {
       header: { type: 'string' },
       options: { type: 'array' },
       multi_select: { type: 'boolean' },
+      detail: { type: 'string' },
     })
     expect(parameters.properties.questions.items.properties.options.items.properties).toMatchObject({
       label: { type: 'string' },
@@ -238,6 +239,30 @@ describe('ask_user_question tool', () => {
 
     expect(result.content).toEqual([{ type: 'text', text: '{"answers":[{"id":"continue","selected":["ok"]}]}' }])
     expect(seen[0]).toMatchObject({ questions: [{ id: 'continue', header: 'Confirm', question: 'Continue?' }], agent })
+  })
+
+  it('passes optional detail through to the user-questions request', async () => {
+    const ctx = await setup()
+    const seen: AskUserQuestionRequest[] = []
+    ctx.userQuestions.registerProvider({
+      async ask(request) {
+        seen.push(request)
+        return { answers: [{ id: 'continue', selected: ['ok'] }] }
+      },
+    })
+
+    await ctx.tools.execute({
+      signal: testToolSignal,
+      callId: CallId('ask-detail'),
+      name: 'ask_user_question',
+      arguments: { questions: [{ id: 'continue', question: 'Continue?', detail: '# Plan
+
+- step one' }] },
+    })
+
+    expect(seen[0]?.questions[0]?.detail).toBe('# Plan
+
+- step one')
   })
 
   it('returns structured user-questions errors through tool execution', async () => {
